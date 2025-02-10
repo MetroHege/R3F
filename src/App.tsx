@@ -7,9 +7,8 @@ const App = () => {
     <section className="three-canvas">
       <Canvas>
         <ambientLight />
-        <pointLight position={[10, 10, 10]} />
-        <Box position={[-2, 0, 0]} />
-        <Box position={[2, 0, 0]} />
+        <pointLight position={[10, 10, 10]} decay={10} />
+        <Box rotation={[0, 1, 0]} position={[-1, 0, 0]} scale={[4, 4, 4]} />
       </Canvas>
     </section>
   );
