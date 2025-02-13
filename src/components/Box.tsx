@@ -1,17 +1,39 @@
-import { ThreeElements } from "@react-three/fiber";
+import { ThreeElements, ThreeEvent, useFrame } from "@react-three/fiber";
 import useTextures from "../hooks/TextureHooks";
+import { useRef, useState } from "react";
+import { Mesh } from "three";
 
 const Box = (props: ThreeElements["mesh"]) => {
-  const { groundTexture } = useTextures();
+  const [rotate, setRotate] = useState(false);
+  const meshRef = useRef<Mesh>(null);
+  useFrame(() => {
+    if (rotate && meshRef.current) {
+      meshRef.current.rotation.y += 0.01;
+    }
+  });
 
+  const pointerOverHandler = (evt: ThreeEvent<PointerEvent>) => {
+    setRotate(true);
+    evt.object.scale.set(5, 5, 5);
+  };
+
+  const pointerOutHandler = (evt: ThreeEvent<PointerEvent>) => {
+    setRotate(false);
+    evt.object.scale.set(4, 4, 4);
+  };
+
+  const { snowTexture } = useTextures();
   return (
-    <mesh {...props}>
-      <boxGeometry args={[1, 1, 1, 100, 100, 100]} />
-      <meshStandardMaterial
-        {...groundTexture}
-        displacementScale={0.02}
-        roughness={0.5}
-      />
+    <mesh
+      {...props}
+      onPointerOver={pointerOverHandler}
+      onPointerOut={pointerOutHandler}
+      ref={meshRef}
+      receiveShadow
+      castShadow
+    >
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial {...snowTexture} metalness={0.5} roughness={0.4} />
     </mesh>
   );
 };

@@ -1,14 +1,19 @@
+import { ThreeElements } from "@react-three/fiber";
 import useTextures from "../hooks/TextureHooks";
+import { memo } from "react";
 
-const Ground = () => {
-  const { snowTexture } = useTextures();
-
+const Ground = memo((props: ThreeElements["mesh"]) => {
+  const { groundTexture } = useTextures();
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
-      <planeGeometry args={[100, 100, 1000, 1000]} />
-      <meshStandardMaterial {...snowTexture} displacementScale={0.04} />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} {...props} receiveShadow>
+      <planeGeometry args={[1, 1, 50, 50]} />
+      <meshStandardMaterial
+        {...groundTexture}
+        displacementScale={0.04}
+        roughness={0.2}
+      />
     </mesh>
   );
-};
+});
 
 export default Ground;
